@@ -13,6 +13,12 @@ class UserCreate(UserBase):
     role: Optional[str] = "customer"
 
 
+class TokenOut(BaseModel):
+    access_token: str
+    token_type: str
+    role: str
+
+
 class UserOut(UserBase):
     user_id: int
     role: str
