@@ -186,5 +186,31 @@
       ],
       "response": []
     }
+    ,
+    {
+      "name": "Admin - Protected",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/admin/protected",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "admin",
+            "protected"
+          ]
+        }
+      },
+      "response": []
+    }
   ]
 }
