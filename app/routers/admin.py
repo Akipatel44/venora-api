@@ -5,5 +5,5 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 
 
 @router.get("/protected")
-def protected_admin(payload: dict = Depends(role_required("superadmin"))):
-    return {"message": "Welcome, superadmin.", "user": {"user_id": payload.get("sub"), "role": payload.get("role")}}
+def protected_admin(payload: dict = Depends(role_required("superadmin", "subadmin"))):
+    return {"message": f"Welcome, {payload.get('role')}", "user": {"user_id": payload.get("sub"), "role": payload.get("role")}}
