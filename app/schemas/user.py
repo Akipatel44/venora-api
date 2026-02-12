@@ -4,17 +4,19 @@ from datetime import datetime
 
 
 class UserBase(BaseModel):
-    username: str
+    full_name: str
     email: EmailStr
 
 
 class UserCreate(UserBase):
     password: str
+    role: Optional[str] = "customer"
 
 
 class UserOut(UserBase):
-    id: int
-    is_active: bool
+    user_id: int
+    role: str
+    status: str
     created_at: datetime
 
     class Config:
