@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.routers import health, auth, admin
+from app.routers import health, auth, admin, hall
 
 # Ensure model modules are imported so they are registered with SQLAlchemy's metadata
 import app.models.user  # noqa: F401
@@ -22,6 +22,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(admin.router)
+app.include_router(hall.router)
 
 
 @app.on_event("startup")
