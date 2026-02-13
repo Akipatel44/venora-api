@@ -18,3 +18,5 @@ class Hall(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     subadmin = relationship("User", foreign_keys=[subadmin_id])
+    amenities = relationship("HallAmenity", back_populates="hall")
+    services = relationship("HallService", back_populates="hall")

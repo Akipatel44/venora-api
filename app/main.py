@@ -1,11 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.routers import health, auth, admin, hall
+from app.routers import health, auth, admin, hall, amenity, service
 
 # Ensure model modules are imported so they are registered with SQLAlchemy's metadata
 import app.models.user  # noqa: F401
 import app.models.hall  # noqa: F401
+import app.models.amenity  # noqa: F401
+import app.models.hall_amenity  # noqa: F401
+import app.models.service  # noqa: F401
+import app.models.hall_service  # noqa: F401
 
 
 app = FastAPI(title="Venora API - Stage 1")
@@ -24,6 +28,8 @@ app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(admin.router)
 app.include_router(hall.router)
+app.include_router(amenity.router)
+app.include_router(service.router)
 
 
 @app.on_event("startup")
