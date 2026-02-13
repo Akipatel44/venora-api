@@ -5,6 +5,7 @@ from app.routers import health, auth, admin
 
 # Ensure model modules are imported so they are registered with SQLAlchemy's metadata
 import app.models.user  # noqa: F401
+import app.models.hall  # noqa: F401
 
 
 app = FastAPI(title="Venora API - Stage 1")
