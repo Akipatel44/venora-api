@@ -58,8 +58,10 @@ class HallResponse(BaseModel):
     location: str
     capacity: int
     base_price: Decimal
+    commission_percent: Optional[Decimal] = None
     status: str
     subadmin_id: int
+    description: Optional[str] = None
     created_at: datetime
 
     class Config:
