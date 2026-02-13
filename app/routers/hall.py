@@ -22,7 +22,7 @@ def create_hall(
     db: Session = Depends(get_db),
     payload: dict = Depends(get_current_user_token),
 ):
-    user_id = payload.get("sub")
+    user_id = int(payload.get("sub"))
     
     db_hall = Hall(
         hall_name=hall_in.hall_name,
@@ -45,7 +45,7 @@ def get_my_halls(
     db: Session = Depends(get_db),
     payload: dict = Depends(get_current_user_token),
 ):
-    user_id = payload.get("sub")
+    user_id = int(payload.get("sub"))
     halls = db.query(Hall).filter(Hall.subadmin_id == user_id).all()
     return halls
 
@@ -70,7 +70,7 @@ def get_hall(
     db: Session = Depends(get_db),
     payload: dict = Depends(get_current_user_token),
 ):
-    user_id = payload.get("sub")
+    user_id = int(payload.get("sub"))  # Convert to int for comparison
     role = payload.get("role")
     
     db_hall = db.query(Hall).filter(Hall.hall_id == hall_id).first()
@@ -91,7 +91,7 @@ def update_hall(
     db: Session = Depends(get_db),
     payload: dict = Depends(get_current_user_token),
 ):
-    user_id = payload.get("sub")
+    user_id = int(payload.get("sub"))
     
     db_hall = db.query(Hall).filter(Hall.hall_id == hall_id).first()
     if not db_hall:
@@ -118,7 +118,7 @@ def delete_hall(
     db: Session = Depends(get_db),
     payload: dict = Depends(get_current_user_token),
 ):
-    user_id = payload.get("sub")
+    user_id = int(payload.get("sub"))
     
     db_hall = db.query(Hall).filter(Hall.hall_id == hall_id).first()
     if not db_hall:
