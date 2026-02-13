@@ -64,6 +64,26 @@ def get_all_halls(
     return halls
 
 
+@router.get("/{hall_id}", response_model=HallResponse)
+def get_hall(
+    hall_id: int,
+    db: Session = Depends(get_db),
+    payload: dict = Depends(get_current_user_token),
+):
+    user_id = payload.get("sub")
+    role = payload.get("role")
+    
+    db_hall = db.query(Hall).filter(Hall.hall_id == hall_id).first()
+    if not db_hall:
+        raise HTTPException(status_code=404, detail="Hall not found")
+    
+    # Allow access if user is the owner or a superadmin
+    if db_hall.subadmin_id != user_id and role != "superadmin":
+        raise HTTPException(status_code=403, detail="Not authorized to view this hall")
+    
+    return db_hall
+
+
 @router.put("/{hall_id}", response_model=HallResponse)
 def update_hall(
     hall_id: int,
