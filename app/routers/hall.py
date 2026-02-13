@@ -77,8 +77,11 @@ def get_hall(
     if not db_hall:
         raise HTTPException(status_code=404, detail="Hall not found")
     
-    # Allow access if user is the owner or a superadmin
-    if db_hall.subadmin_id != user_id and role != "superadmin":
+    # Allow access if:
+    # - User is the owner
+    # - User is a superadmin
+    # - Hall is approved (for customers/public view)
+    if db_hall.subadmin_id != user_id and role != "superadmin" and db_hall.status != "approved":
         raise HTTPException(status_code=403, detail="Not authorized to view this hall")
     
     return db_hall
