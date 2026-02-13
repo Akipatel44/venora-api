@@ -20,7 +20,7 @@ router = APIRouter(prefix="/halls", tags=["halls"])
 def create_hall(
     hall_in: HallCreate,
     db: Session = Depends(get_db),
-    payload: dict = Depends(role_required("subadmin")),
+    payload: dict = Depends(get_current_user_token),
 ):
     user_id = payload.get("sub")
     
@@ -43,7 +43,7 @@ def create_hall(
 @router.get("/my-halls", response_model=List[HallResponse])
 def get_my_halls(
     db: Session = Depends(get_db),
-    payload: dict = Depends(role_required("subadmin")),
+    payload: dict = Depends(get_current_user_token),
 ):
     user_id = payload.get("sub")
     halls = db.query(Hall).filter(Hall.subadmin_id == user_id).all()
@@ -55,7 +55,7 @@ def update_hall(
     hall_id: int,
     hall_in: HallUpdate,
     db: Session = Depends(get_db),
-    payload: dict = Depends(role_required("subadmin")),
+    payload: dict = Depends(get_current_user_token),
 ):
     user_id = payload.get("sub")
     
@@ -82,7 +82,7 @@ def update_hall(
 def delete_hall(
     hall_id: int,
     db: Session = Depends(get_db),
-    payload: dict = Depends(role_required("subadmin")),
+    payload: dict = Depends(get_current_user_token),
 ):
     user_id = payload.get("sub")
     
