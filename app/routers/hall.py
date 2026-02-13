@@ -50,6 +50,20 @@ def get_my_halls(
     return halls
 
 
+@router.get("/", response_model=List[HallResponse])
+def get_all_halls(
+    db: Session = Depends(get_db),
+    payload: dict = Depends(get_current_user_token),
+):
+    # Superadmin gets all halls, others get only approved halls
+    role = payload.get("role")
+    if role == "superadmin":
+        halls = db.query(Hall).all()
+    else:
+        halls = db.query(Hall).filter(Hall.status == "approved").all()
+    return halls
+
+
 @router.put("/{hall_id}", response_model=HallResponse)
 def update_hall(
     hall_id: int,
