@@ -92,12 +92,13 @@ def update_hall(
     payload: dict = Depends(get_current_user_token),
 ):
     user_id = int(payload.get("sub"))
+    role = payload.get("role")
     
     db_hall = db.query(Hall).filter(Hall.hall_id == hall_id).first()
     if not db_hall:
         raise HTTPException(status_code=404, detail="Hall not found")
     
-    if db_hall.subadmin_id != user_id:
+    if db_hall.subadmin_id != user_id and role != "superadmin":
         raise HTTPException(status_code=403, detail="Not authorized to update this hall")
     
     if db_hall.status == "approved":
@@ -119,12 +120,13 @@ def delete_hall(
     payload: dict = Depends(get_current_user_token),
 ):
     user_id = int(payload.get("sub"))
+    role = payload.get("role")
     
     db_hall = db.query(Hall).filter(Hall.hall_id == hall_id).first()
     if not db_hall:
         raise HTTPException(status_code=404, detail="Hall not found")
     
-    if db_hall.subadmin_id != user_id:
+    if db_hall.subadmin_id != user_id and role != "superadmin":
         raise HTTPException(status_code=403, detail="Not authorized to delete this hall")
     
     db_hall.status = "blocked"
