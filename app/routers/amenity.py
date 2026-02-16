@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from typing import List
 
 from app.database import get_db
@@ -89,12 +90,35 @@ def get_hall_amenities(
     db: Session = Depends(get_db),
     payload: dict = Depends(get_current_user_token),
 ):
+    # Use a join query returning amenity details to avoid relying on ORM mapping
     db_hall = db.query(Hall).filter(Hall.hall_id == hall_id).first()
     if not db_hall:
         raise HTTPException(status_code=404, detail="Hall not found")
-    
-    amenities = db.query(HallAmenity).filter(HallAmenity.hall_id == hall_id).all()
-    return amenities
+
+    # Use raw SQL to avoid referencing missing columns on the HallAmenity model.
+    sql = """
+    SELECT ha.hall_id, ha.amenity_id, a.amenity_name, a.is_chargeable, a.base_price
+    FROM hall_amenities ha
+    JOIN amenities a ON a.amenity_id = ha.amenity_id
+    WHERE ha.hall_id = :hall_id
+    """
+    rows = db.execute(text(sql), {"hall_id": hall_id}).mappings().all()
+
+    result = []
+    for r in rows:
+        # r is a mapping; map fields to expected response shape
+        result.append({
+            "id": r.get("amenity_id"),
+            "hall_id": r.get("hall_id"),
+            "amenity_id": r.get("amenity_id"),
+            "custom_price": None,
+            "is_active": True,
+            "amenity_name": r.get("amenity_name"),
+            "is_chargeable": bool(r.get("is_chargeable")),
+            "base_price": r.get("base_price"),
+        })
+
+    return result
 
 
 @router.put("/hall/{amenity_link_id}/price", response_model=HallAmenityResponse)
