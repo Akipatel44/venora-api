@@ -48,6 +48,9 @@ class HallAmenityResponse(BaseModel):
     amenity_id: int
     custom_price: Optional[Decimal] = None
     is_active: bool
+    amenity_name: Optional[str] = None
+    is_chargeable: bool = False
+    base_price: Optional[Decimal] = None
 
     class Config:
         orm_mode = True
